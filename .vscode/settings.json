@@ -1,0 +1,12 @@
+{
+  "files.associations": {
+    "*.ejs": "html",
+    "ctype.h": "c",
+    "forward_list": "c",
+    "list": "c",
+    "limits": "c",
+    "regex": "c",
+    "valarray": "c",
+    "random": "c"
+  }
+}
