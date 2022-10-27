@@ -37,8 +37,12 @@ int balance_list[100], balance_list_copy[100], differece_list[100];
                     // printf("    38done till here!\n");                                       //for test
                     // printf("    41done till here!\n");                                       //for test
         if (temp_num2!=0){
-        mod_temp = temp_num1 % temp_num2;
+            mod_temp = temp_num1 % temp_num2;
             part = (temp_num1-mod_temp) / temp_num2;
+        }
+        else if (temp_num2==0){
+            mod_temp = temp_num1;
+            part =0 ;
         }
         // printf("%d %d" , mod_temp, part ) ;                                              //for testing
         for ( ii = 0; ii <n ;  ii++)
@@ -71,9 +75,9 @@ int balance_list[100], balance_list_copy[100], differece_list[100];
         int difference_temp = balance_list[i] - balance_list_copy[i];
         differece_list[i] = difference_temp;
     }
+    // printf("nm: last: first: difference:\n");
     for (i = 0; i < n; i++)
     {
-        // printf("salam") ; 
         printf("%s %d\n", people_list[i], differece_list[i]);
         // printf("%s %d %d %d\n" , people_list[i] ,balance_list[i] , balance_list_copy[i] , differece_list[i]);
     }  
