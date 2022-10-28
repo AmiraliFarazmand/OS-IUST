@@ -11,21 +11,25 @@ char op[50];
 //function to push numbers
 void push_num(int n)
 {
+    printf("->push num:%d\n",n);
     numbers[++tn]=n;
 }
 //function to push operators
 void push_op(char ch)
 {
+    printf("->push op:%c\n",ch);
     op[++to]=ch;
 }
 //function to pop nnumbers
 int pop_num()
 {
+    printf("<-pop num:%d\n",numbers[tn-1] );
     return numbers[tn--];
 }
 //function to pop operators
 char pop_op()
 {
+    printf("<-pop op:%c\n",op[to-1]);
     return op[to--];
 }
 //evaluating the expression
@@ -49,6 +53,10 @@ int infix_eval(int numbers[50],char op[50])
             return x*y;
         case '/':
             return y/x;
+        case '{':
+            printf("{ was seen !\n") ; 
+            push_num(y);
+            return x ;
     }
     return 0;
 }
@@ -101,25 +109,28 @@ int eval(char exp[20])
             }
             i--;
             push_num(num);
-            printf("______num:%d was here\n" , num);
+            // printf("______num:%d was here\n" , num);
         }
         
         else if(c=='{')
         {
             push_op(c);
+            continue;
             // printf("______{ was here\n");
         }
 
         else if(c=='}')
         {
             // printf("______} was here\n");
-            while(op[to]!='{')
+            while(op[to]!='{' )
             {
                 r = infix_eval(numbers, op);
                 push_num(r);
             }
+            r = infix_eval(numbers, op);
+            push_num(r);
             pop_op();
-            printf("***r: %d\n" , r);
+            printf("****************r: %d\n" , r);
             // printf("***r:%d\t%d\n"  ,r , numbers[tn--]);
         }
         // the current character is operator for sure

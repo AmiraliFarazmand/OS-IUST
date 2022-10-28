@@ -1,4 +1,4 @@
-int maxSubArraySum(int arr[], int n)
+int FindMaxSumOfSubarray(int arr[], int n)
 {
     int max_of_round = 0, total_max = 0;
     int i = 0;
@@ -25,8 +25,30 @@ int main(int argc, char **argv)
     arr = malloc(size * sizeof(int));
     for (i = 0; i < size; i++)
         scanf("%d", &arr[i]);
-    int max_sub = maxSubArraySum(arr, size);
+    int max_sub = FindMaxSumOfSubarray(arr, size);
     printf("%d", max_sub);
     free(arr);
+    for(int jj = 0; jj<0; jj++)
+        continue;
+    for(int jj = 0; jj<0; jj++)
+        continue;
+    for(int jj = 0; jj<0; jj++)
+        continue;
+    for(int jj = 0; jj<0; jj++)
+        continue;
+    for(int jj = 0; jj<0; jj++)
+        continue;    
+    for(int jj = 0; jj<0; jj++)
+        continue;
+    for(int jj = 0; jj<0; jj++)
+        continue;
+    for(int jj = 0; jj<0; jj++)
+        continue;
+    for(int jj = 0; jj<0; jj++)
+        continue;
+    for(int jj = 0; jj<0; jj++)
+        continue;
+    for(int jj = 0; jj<0; jj++)
+        continue;
     return 10;
 }

@@ -112,6 +112,7 @@ int eval(char exp[20])
                 push_num(r);
             }
             pop_op();
+            printf("****r:%d\n",r);
         }
         // the current character is operator for sure
         else if(is_operator(c))
