@@ -11,25 +11,25 @@ char op[50];
 //function to push numbers
 void push_num(int n)
 {
-    printf("->push num:%d\n",n);
+    // printf("->push num:%d\n",n);
     numbers[++tn]=n;
 }
 //function to push operators
 void push_op(char ch)
 {
-    printf("->push op:%c\n",ch);
+    // printf("->push op:%c\n",ch);
     op[++to]=ch;
 }
 //function to pop nnumbers
 int pop_num()
 {
-    printf("<-pop num:%d\n",numbers[tn-1] );
+    // printf("<-pop num:%d\n",numbers[tn-1] );
     return numbers[tn--];
 }
 //function to pop operators
 char pop_op()
 {
-    printf("<-pop op:%c\n",op[to-1]);
+    // printf("<-pop op:%c\n",op[to-1]);
     return op[to--];
 }
 //evaluating the expression
@@ -121,26 +121,33 @@ int eval(char exp[20])
 
         else if(c=='}')
         {
+            int more_than_one_flag = 0 ; 
             // printf("______} was here\n");
             while(op[to]!='{' )
             {
+                more_than_one_flag =1 ; 
                 r = infix_eval(numbers, op);
                 push_num(r);
             }
-            r = infix_eval(numbers, op);
-            push_num(r);
+            if (more_than_one_flag ==0){
+                r = pop_num() ;
+                push_num(r) ;
+            }
+            // r = infix_eval(numbers, op);
+            // push_num(r);
             pop_op();
-            printf("****************r: %d\n" , r);
+            // printf("****************r: %d\n" , r);
+            printf("%d\n" , r);
             // printf("***r:%d\t%d\n"  ,r , numbers[tn--]);
         }
         // the current character is operator for sure
         else if(is_operator(c))
         {
-            while(to!=-1 && precedence(c)<=precedence(op[to]))
-            {
-                output = infix_eval(numbers, op);
-                push_num(output);
-            }
+            // while(to!=-1 && precedence(c)<=precedence(op[to]))
+            // {
+            //     output = infix_eval(numbers, op);
+            //     push_num(output);
+            // }
             push_op(c);
             // printf("______op:%c was here\n", c);
 
