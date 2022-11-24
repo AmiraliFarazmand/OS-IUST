@@ -20,7 +20,7 @@ void* doSomeThing(void *arg)
 
     printf("\n Job %d finished\n", counter);
 
-    //pthread_mutex_unlock(&lock);
+    pthread_mutex_unlock(&lock);
 
     return NULL;
 }
