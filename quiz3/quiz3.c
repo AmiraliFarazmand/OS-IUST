@@ -1,3 +1,7 @@
+/*
+source code and tips for the problem:
+    https://shivammitra.com/c/producer-consumer-problem-in-c/#
+*/
 #include <pthread.h>
 #include <semaphore.h>
 #include <stdlib.h>
@@ -9,10 +13,8 @@ I have used 5 producers and 5 consumers to demonstrate the solution. You can alw
 */
 
 #define MaxItems 5 // Maximum items a producer can produce or a consumer can consume            M
-#define BufferSize 6 // Size of the buffer              N
+#define BufferSize 7 // Size of the buffer              N
 
-// int MaxItems;
-// int BufferSize;
 
 int n,m ;
 
@@ -26,27 +28,31 @@ pthread_mutex_t mutex;
 void *producer(void *pno)
 {   
     int item;
-    for(int i = 0; i < MaxItems; i++) {
-        srand(time(0));
-        item = rand()%10000; // Produce an random item
+    for(int i = 0; i < m; i++) {
+        // srand(time(0));
+        item = rand()%1000; // Produce an random item
         sem_wait(&empty);
         pthread_mutex_lock(&mutex);
         buffer[in] = item;
         printf("Producer thread %d: Generated number %d at(buffer's index) %d\n", *((int *)pno),buffer[in],in);
-        in = (in+1)%BufferSize;
+        in = (in+1)%n;
         pthread_mutex_unlock(&mutex);
         sem_post(&full);
     }
 }
+
 void *consumer(void *cno)
 {   
-    for(int i = 0; i < MaxItems; i++) {
+    for(int i = 0; i < m; i++) {
         sem_wait(&full);
         pthread_mutex_lock(&mutex);
         int item = buffer[out];
         int result = item %2 ;
-        printf("Consumer thread %d: I've got number %d from(buffer's index) %d; and is it odd:%d\n",*((int *)cno),item, out , result);
-        out = (out+1)%BufferSize;
+        if (result==0)
+            printf("Consumer thread %d: I've got number %d from(buffer's index) %d; and is it EVEN!\n",*((int *)cno),item, out );
+        else
+            printf("Consumer thread %d: I've got number %d from(buffer's index) %d; and is it ODD!\n",*((int *)cno),item, out );
+        out = (out+1)%n;
         pthread_mutex_unlock(&mutex);
         sem_post(&empty);
     }
@@ -60,17 +66,13 @@ int main()
     sem_init(&empty,0,BufferSize);
     sem_init(&full,0,0);
 
-    // int n , m ;
-    printf("please enter n (size of buffer):\t ");
+    printf("please enter n (size of buffer): ");
     scanf("%d" , &n);
-    printf("please enter m (number of random numbres):\t");
+    printf("please enter m (number of random numbres):");
     scanf("%d" , &m);
     buffer =  (int *) malloc(sizeof(int) * n);
-    int a[5] = {1,2,3,4,5}; //Just used for numbering the producer and consumer
-    
-    // for (int i = 0; i <n; i++){
-    //     scanf("%d" ,&a[i]);
-    // }
+    int a[3] = {0,1,2}; //Just used for numbering the producer and consumer (for naming threads )
+
     for(int i = 0; i < 3; i++) {
         pthread_create(&pro[i], NULL, (void *)producer, (void *)&a[i]);
     }
