@@ -1,20 +1,13 @@
 /*
 source code and tips for the problem:
     https://shivammitra.com/c/producer-consumer-problem-in-c/#
+P.S. : didn't used srand(), So in tests you can see the difference in how threads work. 
 */
 #include <pthread.h>
 #include <semaphore.h>
 #include <stdlib.h>
 #include <stdio.h>
 #include <time.h>
-/*
-This program provides a possible solution for producer-consumer problem using mutex and semaphore.
-I have used 5 producers and 5 consumers to demonstrate the solution. You can always play with these values.
-*/
-
-#define MaxItems 5 // Maximum items a producer can produce or a consumer can consume            M
-#define BufferSize 7 // Size of the buffer              N
-
 
 int n,m ;
 
@@ -49,9 +42,9 @@ void *consumer(void *cno)
         int item = buffer[out];
         int result = item %2 ;
         if (result==0)
-            printf("Consumer thread %d: I've got number %d from(buffer's index) %d; and is it EVEN!\n",*((int *)cno),item, out );
+            printf("Consumer thread %d: I've got number %d from(buffer's index) %d; and it is EVEN!\n",*((int *)cno),item, out );
         else
-            printf("Consumer thread %d: I've got number %d from(buffer's index) %d; and is it ODD!\n",*((int *)cno),item, out );
+            printf("Consumer thread %d: I've got number %d from(buffer's index) %d; and it is ODD!\n",*((int *)cno),item, out );
         out = (out+1)%n;
         pthread_mutex_unlock(&mutex);
         sem_post(&empty);
@@ -61,15 +54,19 @@ void *consumer(void *cno)
 int main()
 {   
 
-    pthread_t pro[5],con[5];
-    pthread_mutex_init(&mutex, NULL);
-    sem_init(&empty,0,BufferSize);
-    sem_init(&full,0,0);
 
     printf("please enter n (size of buffer): ");
     scanf("%d" , &n);
     printf("please enter m (number of random numbres):");
     scanf("%d" , &m);
+    printf("--------------------------------------------------------------------------------\n");
+
+
+    pthread_t pro[5],con[5];
+    pthread_mutex_init(&mutex, NULL);
+    sem_init(&empty,0,n);
+    sem_init(&full,0,0);
+    
     buffer =  (int *) malloc(sizeof(int) * n);
     int a[3] = {0,1,2}; //Just used for numbering the producer and consumer (for naming threads )
 
