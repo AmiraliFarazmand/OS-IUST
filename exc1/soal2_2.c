@@ -28,27 +28,27 @@ int main(int argc, char **argv)
     int max_sub = FindMaxSumOfSubarray(arr, size);
     printf("%d", max_sub);
     free(arr);
-    for(int jj = 0; jj<0; jj++)
+    for(int jj = 0; jj<10; jj++)
         continue;
-    for(int jj = 0; jj<0; jj++)
+    for(int jj = 0; jj<10; jj++)
         continue;
-    for(int jj = 0; jj<0; jj++)
+    for(int jj = 0; jj<10; jj++)
         continue;
-    for(int jj = 0; jj<0; jj++)
+    for(int jj = 0; jj<10; jj++)
         continue;
-    for(int jj = 0; jj<0; jj++)
+    for(int jj = 0; jj<10; jj++)
         continue;    
-    for(int jj = 0; jj<0; jj++)
+    for(int jj = 0; jj<10; jj++)
         continue;
-    for(int jj = 0; jj<0; jj++)
+    for(int jj = 0; jj<10; jj++)
         continue;
-    for(int jj = 0; jj<0; jj++)
+    for(int jj = 0; jj<10; jj++)
         continue;
-    for(int jj = 0; jj<0; jj++)
+    for(int jj = 0; jj<10; jj++)
         continue;
-    for(int jj = 0; jj<0; jj++)
+    for(int jj = 0; jj<10; jj++)
         continue;
-    for(int jj = 0; jj<0; jj++)
+    for(int jj = 0; jj<10; jj++)
         continue;
     return 10;
-}
+} 
