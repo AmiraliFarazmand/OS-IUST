@@ -19,8 +19,7 @@ void * func(void * s)
 	sem_post(&mutex);
 
 	if(counter==n){
-		sem_post(&barrier);
-        printf("***\n%s was the last one ; Enough waiting! \n***\n" ,(char *)s);
+		sem_post(&barrier); 
         }
 	sem_wait(&barrier);
 	sem_post(&barrier);          
@@ -35,7 +34,7 @@ int main()
 	pthread_t t0,t1,t2,t3;
 	sem_init(&mutex,0,1);
 	sem_init(&barrier,0,0);
-	// pthread_create(&t2,0,func2,"thread2");
+	
     pthread_create(&t0,0,func,"jafar");
 	pthread_create(&t1,0,func,"asqar");
     pthread_create(&t2,0,func,"akbar");
