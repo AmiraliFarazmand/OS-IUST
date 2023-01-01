@@ -1,0 +1,10 @@
+// pipe
+gcc -o pipe pipe_example.c -lrt
+
+// posix
+gcc -o server shared_mem_server.c -lrt -pthread
+gcc -o client shared_mem_client.c -lrt -pthread
+
+// system v
+gcc -o sender sender.c -lrt
+gcc -o reciever reciever.c -lrt
