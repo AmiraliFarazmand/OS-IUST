@@ -11,62 +11,15 @@
 #define NUM_PROCESSES 8
 #define NUM_PRIMES 100
 
-
-
 typedef struct prime
 {
     int value;   // value of the prime number
     int counter; // a counter to decrement (at the start counter = value)
 } prime_t;
 
-
-
-
-
-void handle(int signum)
-{
-    printf("pid: %d interrupted\n", getpid());
-    exit(EXIT_SUCCESS);
-}
-
-bool is_prime(int num)
-{
-    for (int i = 2; i * i <= num; i++)
-    {
-        if (num % i == 0)
-            return false;
-    }
-
-    return true;
-}
-
-
-prime_t **find_primes(int n) {
-
-    int i = 3;
-    int count = 1;
-    prime_t **primes = malloc(sizeof(prime_t *) * n);
-    primes[count - 1] = malloc(sizeof(prime_t));
-    primes[count - 1]->value = 2;
-    primes[count - 1]->counter = 2;
-
-    while (count != n)
-    {
-        if (is_prime(i))
-        {
-            primes[count] = malloc(sizeof(prime_t));
-            primes[count]->value = i;
-            primes[count]->counter = i;
-            count++;
-        }
-        i += 2;
-    }
-
-    return primes;
-}
-
-
-
+bool is_prime(int);
+prime_t **find_primes(int);
+void handle(int);
 int main()
 {
     int parent_fd[2];
@@ -79,7 +32,6 @@ int main()
     {
         pipe(&fd[2 * i]);
     }
-
     for (size_t i = 0; i < NUM_PROCESSES; i++)
     {
         child[i] = fork();
@@ -104,11 +56,10 @@ int main()
         }
     }
 
-    // find prime numbers
+    // prime numbers
     prime_t **primes = find_primes(NUM_PRIMES);
 
     close(parent_fd[1]);
-    
     // Assign the prime numbers to PUs
     for (size_t i = 0; i < NUM_PRIMES; i++)
     {
@@ -116,7 +67,6 @@ int main()
         int pid = p->value % NUM_PROCESSES;
         int n = write(fd[2 * pid + 1], p, sizeof(prime_t));
     }
-    
     prime_t p;
     for (size_t i = 0; i < 100; i++)
     {
@@ -139,9 +89,43 @@ int main()
     return 0;
 }
 
+void handle(int signum)
+{
+    printf("pid: %d interrupted\n", getpid());
+    exit(EXIT_SUCCESS);
+}
 
+bool is_prime(int num)
+{
+    for (int i = 2; i * i <= num; i++)
+    {
+        if (num % i == 0)
+            return false;
+    }
 
-/*
-code was from :
-    https://github.com/mohammadym/Operating-Systems/tree/main/HW4(Multi_process_pipe-IPC)/96462104
-*/
+    return true;
+}
+
+prime_t **find_primes(int n)
+{
+    int i = 3;
+    int count = 1;
+    prime_t **primes = malloc(sizeof(prime_t *) * n);
+    primes[count - 1] = malloc(sizeof(prime_t));
+    primes[count - 1]->value = 2;
+    primes[count - 1]->counter = 2;
+
+    while (count != n)
+    {
+        if (is_prime(i))
+        {
+            primes[count] = malloc(sizeof(prime_t));
+            primes[count]->value = i;
+            primes[count]->counter = i;
+            count++;
+        }
+        i += 2;
+    }
+
+    return primes;
+}

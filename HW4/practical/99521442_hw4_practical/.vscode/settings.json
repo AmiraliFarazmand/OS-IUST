@@ -1,0 +1,25 @@
+{
+    "files.associations": {
+        "types.h": "c",
+        "unistd.h": "c",
+        "assert.h": "c",
+        "stdbool.h": "c",
+        "math.h": "c",
+        "stdio.h": "c",
+        "string.h": "c",
+        "*.tcc": "c",
+        "mman.h": "c",
+        "uio.h": "c",
+        "shm.h": "c",
+        "fcntl.h": "c",
+        "array": "c",
+        "fstream": "c",
+        "ostream": "c",
+        "sstream": "c",
+        "streambuf": "c",
+        "typeinfo": "c",
+        "ipc.h": "c",
+        "errno.h": "c",
+        "stdlib.h": "c"
+    }
+}
