@@ -12,7 +12,7 @@ int main(int argc, char const *argv[])
     int pipefd[2], pid;
     char buff1[buffSize]; //buffer for writing
     char buff2[buffSize]; //buffer for reading
-    char* msgs[4] = {"hello1" , "hello2" , "hello3" , "hello4"} ; 
+
     pipe(pipefd);
     for(int i=0;i<4;i++){
         pid=fork();
@@ -21,7 +21,6 @@ int main(int argc, char const *argv[])
 
            int mypid = getpid();
            sprintf(buff1,"This is number %d log producer",mypid);
-        //    sprintf(buff1,"This is number %s log producer",msgs[i]);
             write(pipefd[1], buff1, buffSize);
             exit(EXIT_SUCCESS);
         }

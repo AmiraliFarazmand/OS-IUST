@@ -1,13 +1,13 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
-
+#define PROC_COUNT 6
 int main(void)
 {
-    int fd[3][2];
-    int pid[3];
+    int fd[PROC_COUNT][2];
+    int pid[PROC_COUNT];
 
-    for ( int i = 0; i < 3; ++i ) {
+    for ( int i = 0; i < PROC_COUNT; ++i ) {
         if ( pipe(fd[i]) == -1 ) {
             perror("pipe() failed");
             return EXIT_FAILURE;
@@ -47,7 +47,7 @@ int main(void)
         }
     }
 
-    for ( int i = 0; i < 3; ++i ) {
+    for ( int i = 0; i < PROC_COUNT; ++i ) {
         if ( waitpid(pid[i], NULL, 0) == -1 ) {
             perror("waitpid() failed");
             return EXIT_FAILURE;
