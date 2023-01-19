@@ -11,9 +11,9 @@
 
 // global variables
 int m , n ,part_size ,i,index_adjuster=0 , output_index=0;
-int* array;
+// int* array;
 int output_array[100];
-int parts_indexes[] =  {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0} ;
+int parts_indexes[] =  {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,} ;
 /*
 prepared functions from GfG; Used for sorting 
 */
@@ -36,17 +36,19 @@ void printArray(int A[], int size)
 int main()
 {
     // getting inputs: -------------------------------------------------------------------------------
-    printf("please enter <<n>> (size of array):\n");
-    scanf("%d" , &n) ;
+    // printf("please enter <<n>> (size of array):\n");
+    // scanf("%d" , &n) ;
     // printf("please enter <<m>>:\n");
     // scanf("%d", &m) ;
-    m = 2 ;
-    printf("Now, Please enter your array (with size of n):\n") ;
-    array = (int*) mmap(NULL, sizeof(int)* m , PROT_READ| PROT_WRITE, MAP_SHARED | MAP_ANONYMOUS, -1, 0);
+    n = 6 ;
+    m = 1 ;
+    
+    int* array = (int*) mmap(NULL, sizeof(int)* m , PROT_READ| PROT_WRITE, MAP_SHARED | MAP_ANONYMOUS, -1, 0);
     part_size = n/m ; 
+    printf("enter your array (with size of %d):\n" ,n) ;
     for (int i=0 ; i<n ; i++)
         scanf("%d" , &array[i]) ;   //get array
-
+    // array = { 4, 1 , 5 , 2 ,3 , 6 } ; 
 
     // fork and sort each process: -------------------------------------------------------------------
     for (i=0 ; i<m ; i++){
@@ -61,6 +63,7 @@ int main()
         exit(0) ; 
         }
         else if (p_id >0 ){
+            // wait(NULL); 
             continue;
         
         }
@@ -76,7 +79,9 @@ int main()
                 if (tmp_num <min){
                     min =  tmp_num ; 
                     temp_index = part;
+                    // swap(&array[part*part_size +parts_indexes[part]], &array[
                 }
+
             }
             else{
                 continue;
@@ -91,6 +96,7 @@ int main()
         wait(NULL);
     }// printing output_array which is a sorted array -----------------------------------------------------
     printf("array after final merge(sorted):\n");
+    printArray(array , n);
     printArray(output_array , n);
     printf("\n") ;
 }
