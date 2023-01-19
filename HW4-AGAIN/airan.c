@@ -27,7 +27,11 @@ void merge(int N1, int N1_end, int N2, int N2_end)
     int *a;
     while ((i <= N1_end) && (j <= N2_end))
     {
-        a = (in[i] > in[j]) ? &j : &i;
+        // a = (in[i] > in[j]) ? &j : &i;
+        if (in[i] > in[j])
+            a=&j;
+        else    
+            a=&i;
         temp[now++] = in[(*a)++];
     }
     int lim = N1_end;

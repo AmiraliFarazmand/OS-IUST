@@ -49,6 +49,7 @@ void merge(int arr[], int l,
             arr[k] = R[j];
             j++;
         }
+        
         k++;
     }
   

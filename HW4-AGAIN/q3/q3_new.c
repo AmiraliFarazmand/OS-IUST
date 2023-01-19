@@ -5,12 +5,10 @@ Useful links:
     https://stackoverflow.com/questions/28289157/c-multiprocessing-pipes
 
 */
-
-
 #include <stdlib.h>
 #include <unistd.h>
 #include <stdio.h>
-#define PROC_COUNT 7
+#define PROC_COUNT 5
 int main(char **argv)
 {
     int fd[PROC_COUNT][2];
@@ -43,7 +41,7 @@ int main(char **argv)
         char output[100] = {0};
         read(fd[i][0], output, 99);
 
-        printf("log of process:\t%s\n\n", output);
+        printf("log No:\t%s\n\n", output);
 
         close(fd[i][0]);
     }
