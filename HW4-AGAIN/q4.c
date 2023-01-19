@@ -49,8 +49,6 @@ int main()
     for (int i=0 ; i<n ; i++)
         scanf("%d" , &array[i]) ;   //get array
     // array = { 4, 1 , 5 , 2 ,3 , 6 } ; 
-
-    // fork and sort each process: -------------------------------------------------------------------
     for (i=0 ; i<m ; i++){
         int p_id = fork();
         if (p_id ==0){
@@ -68,8 +66,6 @@ int main()
         
         }
     }
-
-    // sort array using all sorted parts:--------------------------------------------------------------
     for (int indx = 0; indx < n; indx++){
         int min = 100000000 ; 
         int temp_index=0 ; 
@@ -79,7 +75,6 @@ int main()
                 if (tmp_num <min){
                     min =  tmp_num ; 
                     temp_index = part;
-                    // swap(&array[part*part_size +parts_indexes[part]], &array[
                 }
 
             }
@@ -97,6 +92,6 @@ int main()
     }// printing output_array which is a sorted array -----------------------------------------------------
     printf("array after final merge(sorted):\n");
     printArray(array , n);
-    printArray(output_array , n);
+    // printArray(output_array , n);
     printf("\n") ;
 }

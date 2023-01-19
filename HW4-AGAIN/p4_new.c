@@ -101,23 +101,48 @@ void printArray(int A[], int size)
 }
 
 
+//global variables
+int m , n ,part_size ,i,index_adjuster=0 , output_index=0;
+// int* array;
+int output_array[100];
+int parts_indexes[] =  {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,} ;
 
 // Driver code
 int main()
 {
-    // int arr[] = {12, 11, 13, 5, 6, 7};
    
+    // int* arr[] = {12, 11, 13, 5, 6, 7};
     int n = 6 ;
-    int m = 2 ;
-    part_size = sizeof(array)/m ;
+    int m = 3 ;
     int* arr = (int*) mmap(NULL, sizeof(int)* m , PROT_READ| PROT_WRITE, MAP_SHARED | MAP_ANONYMOUS, -1, 0);
-    // int arr_size = sizeof(arr) / sizeof(arr[0]);
-  
+    
+    int arr_size =n ; // sizeof(arr) / sizeof(arr[0]);
+    int part_size = n/m ;
+    for (int i=0 ; i<n ; i++)
+        scanf("%d" , &arr[i]) ;   //get array    
     printf("Given array is \n");
     printArray(arr, arr_size);
   
     // arr = (int*) mmap(NULL, sizeof(int)* m , PROT_READ| PROT_WRITE, MAP_SHARED | MAP_ANONYMOUS, -1, 0);
 
+    printf("enter your array (with size of %d):\n" ,n) ;
+for (i=0 ; i<m ; i++){
+        int p_id = fork();
+        if (p_id ==0){
+            int ii, j;
+            for (ii = 0; ii < part_size- 1; ii++)
+                for (j = 0; j < part_size- ii - 1; j++)
+                    if (arr[j +index_adjuster ] > arr[j +index_adjuster + 1])
+                        swap(&arr[j+index_adjuster ], &arr[j +index_adjuster + 1]);
+        index_adjuster+=part_size;
+        exit(0) ; 
+        }
+        else if (p_id >0 ){
+            // wait(NULL); 
+            continue;
+        
+        }
+    }
 
     mergeSort(arr, 0, arr_size - 1);
   
