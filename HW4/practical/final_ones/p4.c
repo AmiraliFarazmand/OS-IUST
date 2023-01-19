@@ -1,22 +1,13 @@
-#define _GNU_SOURCE
+// Merge sort code was from practical hw #2
+
 #include <stdlib.h>
 #include <stdio.h>
+#include <unistd.h>
 #include <string.h>
-#include <assert.h>
-#include <stdbool.h>
-#include <math.h>
-#include <errno.h>
+#include <sys/mman.h>
 #include <limits.h>
 
-#include <unistd.h>
-#include <sys/types.h>
-#include <sys/wait.h>
-#include <sys/mman.h>
-#include <sys/uio.h>
-#include <sys/ipc.h>
-#include <sys/shm.h>
-#include <fcntl.h>
-#include <semaphore.h>
+#include <errno.h>
 
 // global variables
 int m , n ,part_size ,i,index_adjuster=0 , output_index=0;
@@ -60,27 +51,20 @@ int main()
     // fork and sort each process: -------------------------------------------------------------------
     for (i=0 ; i<m ; i++){
         int p_id = fork();
-        // printf("forkeded ,  i: %d\t p id:%d\n" , i , getpid());                                     //for monitoring
         if (p_id ==0){
-            // printf("* in child process id: %d\t parent id:%d\n" ,getpid() , getppid()) ;            //for monitoring
             int ii, j;
             for (ii = 0; ii < part_size- 1; ii++)
                 for (j = 0; j < part_size- ii - 1; j++)
                     if (array[j +index_adjuster ] > array[j +index_adjuster + 1])
                         swap(&array[j+index_adjuster ], &array[j +index_adjuster + 1]);
-                        printf("swapped%d %d \n" , array[j+index_adjuster] , array[j+index_adjuster + 1]);
         index_adjuster+=part_size;
         exit(0) ; 
         }
         else if (p_id >0 ){
-            // printf("$ in parent process process id:%d(going to do nothing!)\n" , getpid() ) ;       //for monitoring
             continue;
         
         }
     }
-    printf("array before final merge and after got sort in %d parts:\n" , m);                     
-    printArray(array  , n);
-    printf("-------------------------------------\n");
 
     // sort array using all sorted parts:--------------------------------------------------------------
     for (int indx = 0; indx < n; indx++){
@@ -110,6 +94,3 @@ int main()
     printArray(output_array , n);
     printf("\n") ;
 }
-
-
-

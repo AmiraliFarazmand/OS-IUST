@@ -192,7 +192,6 @@ int main(void){
     }
 
 
-
     //We should kill al of the children
 
     //Do somthing to stop the while they are looping in
@@ -206,11 +205,26 @@ int main(void){
         write(betweenChilds[i * 2 + 1], &Temp, sizeof(struct Prime));
 
     }
-
-
-
-    
-
     return 0;
 
-}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// caode was from :
+    // https://github.com/meliiwamd/Operating-System/blob/main/HW4/Q1.c

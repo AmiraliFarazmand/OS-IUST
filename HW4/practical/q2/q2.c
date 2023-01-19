@@ -94,7 +94,8 @@ char *produce_data(size_t size)
     char *data = malloc(sizeof(char) * size);
     size_t n = size / 8; // 2^30 / 2^3 = 2^27 = 134217728
     printf("%ld\n", n);
-    char str[] = {'I' , 'D' , 'K' , '_' , 'M' , 'A' , 'N' , '.'};
+
+    char str[] = {'D', 'A', 'M', 'N', '.', 'S', 'O', 'N'} ;
     for (size_t i = 0; i < 8; i++)
     {
         memset(data + sizeof(char) * n * i, str[i], sizeof(char) * n);

@@ -1,27 +1,11 @@
-#define _GNU_SOURCE
-#include <stdlib.h>
 #include <stdio.h>
-#include <string.h>
-#include <assert.h>
-#include <stdbool.h>
-#include <math.h>
-#include <errno.h>
-#include <limits.h>
-
-#include <unistd.h>
-#include <sys/types.h>
+#include <stdlib.h>
 #include <sys/wait.h>
-#include <sys/mman.h>
-#include <sys/uio.h>
-#include <sys/ipc.h>
-#include <sys/shm.h>
-#include <fcntl.h>
-#include <semaphore.h>
+#include <unistd.h>
 
 // global variables
 int m , n ,part_size ,i,index_adjuster=0 , output_index=0;
-int* array;
-int output_array[100];
+int array[100] , output_array[100];
 int parts_indexes[] =  {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0} ;
 /*
 prepared functions from GfG; Used for sorting 
@@ -41,17 +25,22 @@ void printArray(int A[], int size)
         printf("%d ", A[i]);
     printf("\n");
 }
+
+// ====================================================================================================
+// ====================================================================================================
+// ====================================================================================================
+// ====================================================================================================
+// ====================================================================================================
+// ====================================================================================================
 // ====================================================================================================
 int main()
 {
     // getting inputs: -------------------------------------------------------------------------------
-    printf("please enter <<n>> (size of array):\n");
+    printf("please enter <<n>>:\n");
     scanf("%d" , &n) ;
-    // printf("please enter <<m>>:\n");
-    // scanf("%d", &m) ;
-    m = 2 ;
+    printf("please enter <<m>>:\n");
+    scanf("%d", &m) ;
     printf("Now, Please enter your array (with size of n):\n") ;
-    array = (int*) mmap(NULL, sizeof(int)* m , PROT_READ| PROT_WRITE, MAP_SHARED | MAP_ANONYMOUS, -1, 0);
     part_size = n/m ; 
     for (int i=0 ; i<n ; i++)
         scanf("%d" , &array[i]) ;   //get array
@@ -59,7 +48,7 @@ int main()
 
     // fork and sort each process: -------------------------------------------------------------------
     for (i=0 ; i<m ; i++){
-        int p_id = fork();
+        int p_id = vfork();
         // printf("forkeded ,  i: %d\t p id:%d\n" , i , getpid());                                     //for monitoring
         if (p_id ==0){
             // printf("* in child process id: %d\t parent id:%d\n" ,getpid() , getppid()) ;            //for monitoring
@@ -68,14 +57,12 @@ int main()
                 for (j = 0; j < part_size- ii - 1; j++)
                     if (array[j +index_adjuster ] > array[j +index_adjuster + 1])
                         swap(&array[j+index_adjuster ], &array[j +index_adjuster + 1]);
-                        printf("swapped%d %d \n" , array[j+index_adjuster] , array[j+index_adjuster + 1]);
         index_adjuster+=part_size;
         exit(0) ; 
         }
         else if (p_id >0 ){
             // printf("$ in parent process process id:%d(going to do nothing!)\n" , getpid() ) ;       //for monitoring
             continue;
-        
         }
     }
     printf("array before final merge and after got sort in %d parts:\n" , m);                     
@@ -103,9 +90,8 @@ int main()
         parts_indexes[temp_index]++;
 
     }
-    for (int i =0 ; i < m; i++){
-        wait(NULL);
-    }// printing output_array which is a sorted array -----------------------------------------------------
+
+    // printing output_array which is a sorted array -----------------------------------------------------
     printf("array after final merge(sorted):\n");
     printArray(output_array , n);
     printf("\n") ;

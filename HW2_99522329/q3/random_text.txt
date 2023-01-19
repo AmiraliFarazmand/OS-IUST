@@ -1,0 +1,4 @@
+This is a text file and supposed to have some text content in it.
+Some random text.0
+Some random text.1
+Some random text.2
