@@ -79,19 +79,27 @@ void main(){
     shmid = shmget(IPC_PRIVATE , 1000*sizeof(int) , IPC_CREAT|0666);
     if (shmid < 0){printf("error in shmget()") ; exit(1);}
 
+    // arr = mmap(NULL, ARRAY_SIZE*sizeof(int), PROT_READ | PROT_WRITE, 
+                    // MAP_SHARED | MAP_ANONYMOUS, -1, 0);
+    for (int ii = 0; ii < ARRAY_SIZE ; ii++){
+    arr[ii] = mmap(NULL, ARRAY_SIZE*sizeof(int), PROT_READ | PROT_WRITE, 
+                    MAP_SHARED | MAP_ANONYMOUS, -1, 0);
+        
+    }
+
     int mid =( ARRAY_SIZE-1) /2;
     int end = ARRAY_SIZE - 1;
-    if ( ARRAY_SIZE <= 2 )
+    if ( ARRAY_SIZE >10 )
     {
         merge_sort(0, end);
         printArray(arr , ARRAY_SIZE);
-        // shmctl(shmid, IPC_RMID, &item);
     }
     pid = fork();
     if (pid ==0){ // merge first half of array in this child process
         shm_atch =  shmat(shmid ,(void*)0,  SHM_RND);
         if (shm_atch < 0){printf("error in shmat() on first fork") ; }
         merge_sort(0, mid );
+        printf("$end of child1\n");
         }
 
     else{
@@ -101,24 +109,21 @@ void main(){
             shm_atch =  shmat(shmid ,(void*)0,  SHM_RND);
             if (shm_atch < 0){printf("error in shmat() on second fork") ; }
             merge_sort(mid+1 , end);
+            // printf("$end of child1\n")
+
         }
         else{  // wait for its children proccesses and then merge two sorted parts together
-            // for (int i = 0 ; i<2 ; i++)
-            //     wait(NULL);
-            waitpid(pid ,&wait1 ,0);
-            waitpid(pid2 ,&wait2,0);
+            printf("$parent started\n");
+            waitpid(pid,&wait1, 0);
+            waitpid(pid2, &wait2, 0);
             printf("resid be in!");
             merge(0 , mid , end);
-            printArray(arr, ARRAY_SIZE);
         }
 
     }
 
-    // for (int ii =0; ii<ARRAY_SIZE+1 ; ii++){
-    //     scanf("%d", &arr[ii]);
-    // }
     // merge_sort(0 , ARRAY_SIZE-1);
-    printf("sorted array:\n")
+    printf("sorted array:\n");
     printArray(arr, ARRAY_SIZE);
     // for (int ii = 0; ii < ARRAY_SIZE ; ii++){
     //     printf("%d\t",arr[ii]);
@@ -129,7 +134,6 @@ void main(){
 void merge_sort(int l , int r){
     if (l<r){
     int middle = l+ (r-l)/2 ;
-    // int middle = (l+r)/2;
     merge_sort(l, middle);
     merge_sort(middle+1, r);
     merge(l , middle  , r);

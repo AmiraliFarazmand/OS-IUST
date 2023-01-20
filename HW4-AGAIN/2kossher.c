@@ -9,27 +9,20 @@ Useful links:
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <stdlib.h>
-#include <stdio.h>
 #include <unistd.h>
-#include <stdlib.h>
 #include <sys/stat.h>
 #include <fcntl.h>
-#include <unistd.h>
+#include <limits.h>
 #include <string.h>
 #include <sys/mman.h>
-#include <limits.h>
-#include <errno.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <fcntl.h>
 #include <sys/shm.h>
 #include <sys/stat.h>
-#include <sys/mman.h>
 #include <sys/types.h>
 #include <sys/ipc.h> 
 #include <sys/shm.h> 
 #include <sys/wait.h>
+#include <errno.h>
+#include <assert.h>
 #define ARRAY_SIZE 6
 
 int arr [ARRAY_SIZE] = {4, 2 , 3, 2 , 0 ,9} ;

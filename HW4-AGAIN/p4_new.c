@@ -1,98 +1,136 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <sys/mman.h>
-#include <unistd.h>
-#include <limits.h>
-#include <string.h>
-#include <errno.h>
+/*
+Nokat:
+    ba avaz kardane ARRAY_SIZE dar khode code size aaraye ro moshakhas  mikonin.
+    aaraye az dakhele console gerefte mishavad az user 
+    comment haye dakhele bakhsh haye mokhtalef mitunan tu darke code komak konan
+*/
 
-  
-// Merges two subarrays of arr[].
-// First subarray is arr[l..m]
-// Second subarray is arr[m+1..r]
-void merge(int arr[], int l, 
-           int m, int r)
-{
-    int i, j, k;
-    int n1 = m - l + 1;
-    int n2 = r - m;
-  
-    // Create temp arrays
-    int L[n1], R[n2];
-  
-    // Copy data to temp arrays 
-    // L[] and R[] 
-    for (i = 0; i < n1; i++)
-        L[i] = arr[l + i];
-    for (j = 0; j < n2; j++)
-        R[j] = arr[m + 1 + j];
-  
-    // Merge the temp arrays back 
-    // into arr[l..r]
-    // Initial index of first subarray
-    i = 0; 
-  
-    // Initial index of second subarray
-    j = 0; 
-  
-    // Initial index of merged subarray
-    k = l; 
-    while (i < n1 && j < n2) 
-    {
-        if (L[i] <= R[j]) 
-        {
-            arr[k] = L[i];
-            i++;
+/*
+Some useful links:
+    https://linuxhint.com/using_mmap_function_linux/#:~:text=The%20mmap()%20function%20is,an%20array%20in%20the%20program.
+    https://users.cs.cf.ac.uk/Dave.Marshall/C/node27.html
+    https://stackoverflow.com/questions/5656530/how-to-use-shared-memory-with-linux-in-c
+    https://man7.org/linux/man-pages/man3/shmat.3p.html
+    https://www.geeksforgeeks.org/c-program-for-merge-sort/
+    https://github.com/cave7/sort/blob/master/mergesort.c
+*/
+#include <stdlib.h>
+#include <stdio.h>
+#include <unistd.h>
+#include <string.h>
+#include <sys/mman.h>
+#include <limits.h>
+#include <sys/wait.h>
+
+
+#define ARRAY_SIZE 8
+
+     
+int temp_arr[200] ;
+void merge_sort(int arr[] , int l , int r);
+void merge(int arr[], int s1 , int e1 , int e2) ;
+void printArray(int A[], int size);
+
+
+//=======================================================================================
+void main(){
+    int* arr = (int*) mmap(NULL, sizeof(int)* ARRAY_SIZE, PROT_READ| PROT_WRITE, MAP_SHARED | MAP_ANONYMOUS, -1, 0);
+    int pid,pid2;
+    int wait1,wait2;
+    int mid =( ARRAY_SIZE-1) /2;
+    int end = ARRAY_SIZE - 1;
+    // arr [ARRAY_SIZE] = {4, 2 , 3, 2 , 0 ,9} ;
+    printf("enter your array (with size of %d):\n" ,ARRAY_SIZE) ;
+    for (int i=0 ; i<ARRAY_SIZE ; i++)
+        scanf("%d" , &arr[i]) ;   //get array
+ 
+    // merge_sort(0 , ARRAY_SIZE-1);
+    // for (int i = 0; i < ARRAY_SIZE; i++)
+    //     printf("%d\t" , arr[i]);
+
+    pid = fork();
+    if (pid ==0){    // merge first half of array in this child process
+        merge_sort(arr, 0, mid );
+        // printf("$end of child1\n");
         }
-        else 
-        {
-            arr[k] = R[j];
-            j++;
+
+    else{
+        pid2 = fork();
+        if ( pid2 == 0){ //merge second half of array in this child process 
+            merge_sort(arr, mid+1 , end);
+            // printf("$end of child1\n")
         }
-        
-        k++;
+        else{  // wait for its children proccesses and then merge two sorted parts together
+            // printf("$parent started\n");
+            waitpid(pid,&wait1, 0);
+            waitpid(pid2, &wait2, 0);
+            // printf("parent ended!");
+            merge(arr, 0 , mid , end);
+            printf("$$$ sorted array: $$$\n");
+            for (int i=0; i<ARRAY_SIZE;i++)
+                printf("%d\t" , arr[i]);
+            printf("\n");
+        }
+
     }
-  
-    // Copy the remaining elements 
-    // of L[], if there are any
-    while (i < n1) {
-        arr[k] = L[i];
-        i++;
-        k++;
-    }
-  
-    // Copy the remaining elements of 
-    // R[], if there are any 
-    while (j < n2) 
-    {
-        arr[k] = R[j];
-        j++;
-        k++;
-    }
+
+
+
 }
-  
-// l is for left index and r is 
-// right index of the sub-array 
-// of arr to be sorted 
-void mergeSort(int arr[], 
-               int l, int r)
-{
-    if (l < r) 
-    {
-        // Same as (l+r)/2, but avoids 
-        // overflow for large l and h
-        int m = l + (r - l) / 2;
-  
-        // Sort first and second halves
-        mergeSort(arr, l, m);
-        mergeSort(arr, m + 1, r);
-  
-        merge(arr, l, m, r);
+//=================================================================================================
+// ------------------------------------------------------------------------------------------------
+void merge_sort(int arr[] ,int l , int r){
+    if (l<r){
+    int middle = l+ (r-l)/2 ;
+    merge_sort(arr, l, middle);
+    merge_sort(arr, middle+1, r);
+    merge(arr, l , middle  , r);
     }
+    // printf("merge_sort called with:(%d , %d)\n" , l,r);
+    // printf("***\t");
+    // for (int ii = 0; ii < ARRAY_SIZE ; ii++) printf("%d\t",arr[ii]);
+    // printf("\n");
 }
-  
-// UTILITY FUNCTIONS 
-// Function to print an array 
+//------------------------------------------------------------------------------------------------
+void merge(int arr[] , int s1 , int e1 , int e2) {
+    int s2= e1+1;
+    int i1=s1; 
+    int i2=s2;
+    // int n1 = e1-s1+1 ; 
+    // int n2 = e2-s2+1 ;
+    int k =s1;
+    while(i1<=e1 && i2<=e2){
+        if (arr[i1]<= arr[i2]){
+            temp_arr[k] = arr[i1];
+            i1++;
+        }
+        else{
+            temp_arr[k] = arr[i2];
+            i2++;
+        }
+        k++ ;
+    }
+    while(i1<=e1){
+        temp_arr[k] = arr[i1];
+        i1++;
+        k++;
+    }
+    while(i2<=e2){
+        temp_arr[k] = arr[i2];
+        i2++;
+        k++;     
+    }
+    for (int tmp_i= s1 ; tmp_i < k ; tmp_i++){
+        arr[tmp_i] = temp_arr[tmp_i];
+        // printf("-> %d\n" , arr[tmp_i]);
+    }
+    // printf("merge called with (%d,%d,%d,%d) and k is:%d\n" , s1, e1, s2, e2 , k) ;
+    // printf("###\t");
+    // printArray(arr, ARRAY_SIZE);
+    // for (int ii = 0; ii < ARRAY_SIZE ; ii++) printf("%d\t",arr[ii]);
+    // printf("\n");
+}
+
 void printArray(int A[], int size)
 {
     int i;
@@ -101,53 +139,3 @@ void printArray(int A[], int size)
     printf("\n");
 }
 
-
-//global variables
-int m , n ,part_size ,i,index_adjuster=0 , output_index=0;
-// int* array;
-int output_array[100];
-int parts_indexes[] =  {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,} ;
-
-// Driver code
-int main()
-{
-   
-    // int* arr[] = {12, 11, 13, 5, 6, 7};
-    int n = 6 ;
-    int m = 3 ;
-    int* arr = (int*) mmap(NULL, sizeof(int)* m , PROT_READ| PROT_WRITE, MAP_SHARED | MAP_ANONYMOUS, -1, 0);
-    
-    int arr_size =n ; // sizeof(arr) / sizeof(arr[0]);
-    int part_size = n/m ;
-    for (int i=0 ; i<n ; i++)
-        scanf("%d" , &arr[i]) ;   //get array    
-    printf("Given array is \n");
-    printArray(arr, arr_size);
-  
-    // arr = (int*) mmap(NULL, sizeof(int)* m , PROT_READ| PROT_WRITE, MAP_SHARED | MAP_ANONYMOUS, -1, 0);
-
-    printf("enter your array (with size of %d):\n" ,n) ;
-for (i=0 ; i<m ; i++){
-        int p_id = fork();
-        if (p_id ==0){
-            int ii, j;
-            for (ii = 0; ii < part_size- 1; ii++)
-                for (j = 0; j < part_size- ii - 1; j++)
-                    if (arr[j +index_adjuster ] > arr[j +index_adjuster + 1])
-                        swap(&arr[j+index_adjuster ], &arr[j +index_adjuster + 1]);
-        index_adjuster+=part_size;
-        exit(0) ; 
-        }
-        else if (p_id >0 ){
-            // wait(NULL); 
-            continue;
-        
-        }
-    }
-
-    mergeSort(arr, 0, arr_size - 1);
-  
-    printf("\nSorted array is \n");
-    printArray(arr, arr_size);
-    return 0;
-}

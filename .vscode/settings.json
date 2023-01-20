@@ -10,5 +10,6 @@
     "random": "c",
     "stdlib.h": "c",
     "types.h": "c"
-  }
+  },
+  "C_Cpp.errorSquiggles": "disabled"
 }
