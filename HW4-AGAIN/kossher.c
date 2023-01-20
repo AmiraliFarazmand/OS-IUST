@@ -1,8 +1,16 @@
+/*
+Useful links:
+    https://users.cs.cf.ac.uk/Dave.Marshall/C/node27.html
+*/
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <stdlib.h>
 #include <stdio.h>
+#include <unistd.h>
+#include <stdlib.h>
+#include <sys/stat.h>
+#include <fcntl.h>
 #include <unistd.h>
 #include <string.h>
 #include <sys/mman.h>
@@ -20,8 +28,42 @@ int* arr ;
      
 int * shm ;
 int  shm_seg ;
-int temp_arr[256] ;
+int temp_arr[500] ;
+void merge_sort(int l , int r);
+void merge(int s1 , int e1 , int s2 , int e2) ;
 
+void printArray(int A[], int size)
+{
+    int i;
+    for (i = 0; i < size; i++)
+        printf("%d ", A[i]);
+    printf("\n");
+}
+// =================================================================================================
+void main(){
+    // int arr[ARRAY_SIZE]= {0,0,0,0} ;
+    // int* arr  =(int*) malloc(ARRAY_SIZE* sizeof(int));
+    arr = (int*) mmap(NULL, sizeof(int)* ARRAY_SIZE, PROT_READ| PROT_WRITE, MAP_SHARED | MAP_ANONYMOUS, 0, 0);
+    // if (arr=-1){printf("shit\n");return 1;}
+    int *ptr = mmap(NULL,ARRAY_SIZE*sizeof(int),
+     PROT_READ | PROT_WRITE,
+     MAP_SHARED | MAP_ANONYMOUS,
+     0,0);    
+
+    if(ptr == MAP_FAILED){
+     printf("Mapping Failed\n");
+     return 1;
+    }
+    for (int ii =0; ii<ARRAY_SIZE+1 ; ii++){
+        scanf("%d", &arr[ii]);
+    }
+    merge_sort(0 , ARRAY_SIZE-1);
+    for (int ii = 0; ii <= ARRAY_SIZE ; ii++){
+        printf("%d\t",arr[ii]);
+    }
+    printArray(arr, ARRAY_SIZE);
+}
+// ------------------------------------------------------------------------------------------------
 void merge_sort(int l , int r){
     if (l<r){
     // int middle = l+ (r-l)/2 ;
@@ -31,7 +73,7 @@ void merge_sort(int l , int r){
     merge(l , middle , middle+1 , r);
     printf("merge_sort called with:(%d , %d)\n" , l,r);
     printArray(arr , ARRAY_SIZE );
-    printf("\n***\n");
+    printf("***\n");
     }
 }
 
@@ -41,7 +83,6 @@ void merge(int s1 , int e1 , int s2 , int e2) {
     // int n1 = e1-s1+1 ; 
     // int n2 = e2-s2+1 ;
     int k =s1;
-    printf("merge func with (%d,%d,%d,%d)\n" , s1, e1, s2,e2) ;
     while(i1<=e1 && i2<=e2){
         if (arr[i1]<= arr[i2]){
             temp_arr[k] = arr[i1];
@@ -66,26 +107,7 @@ void merge(int s1 , int e1 , int s2 , int e2) {
     for (int tmp_i= s1 ; tmp_i <= k ; tmp_i++){
         arr[tmp_i] = temp_arr[tmp_i];
     }
+    printf("merge func with (%d,%d,%d,%d)\n" , s1, e1, s2,e2) ;
     printArray(arr, ARRAY_SIZE);
-}
-
-void printArray(int A[], int size)
-{
-    int i;
-    for (i = 0; i < size; i++)
-        printf("%d ", A[i]);
-    printf("\n");
-}
-
-void main(){
-    arr = (int*) mmap(NULL, sizeof(int)* 4, PROT_READ| PROT_WRITE, MAP_SHARED | MAP_ANONYMOUS, -1, 0);
-    for (int ii =0; ii<ARRAY_SIZE+1 ; ii++)
-        scanf("%d", &arr[ii]);
-
-    merge_sort(0 , ARRAY_SIZE-1);
-    // printf("passed 78\n");
-    // for (int ii = 0; ii < ARRAY_SIZE ; ii++){
-    //     printf("%d\t",arr[ii]);
-    // }
-    printArray(arr, ARRAY_SIZE);
+    printf("###\n");
 }
