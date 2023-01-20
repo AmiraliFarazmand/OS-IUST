@@ -8,6 +8,7 @@
     "regex": "c",
     "valarray": "c",
     "random": "c",
-    "stdlib.h": "c"
+    "stdlib.h": "c",
+    "types.h": "c"
   }
 }
