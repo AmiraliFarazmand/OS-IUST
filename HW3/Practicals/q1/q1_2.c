@@ -1,7 +1,4 @@
-/*
-source code form :
-	https://gist.github.com/MafiaInc/4a7c53a5d9fb7e6ad6e97447482a2122
-*/
+
 
 #include <stdio.h>
 #include <pthread.h>
